@@ -6,10 +6,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover"
     />
-    <link rel="stylesheet" href="mdui.css" />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="iconfont/iconfont.css" />
-    <script src="mdui.global.js"></script>
+    <link rel="stylesheet" href="./mdui.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./iconfont/iconfont.css" />
+    <script src="./mdui.global.js"></script>
     <title>Keep 4</title>
   </head>
   <body>
@@ -57,14 +57,14 @@
           <mdui-list-item id="main-item">
             <i class="iconfont icon-a-kaiguandakaiguanbi"></i>
             开启四扬声器
-            <mdui-switch id="switch" slot="end-icon"></mdui-switch>
+            <mdui-switch id="switch-loud" slot="end-icon"></mdui-switch>
           </mdui-list-item>
           <mdui-list-item id="hide-bg-item">
             <i class="iconfont icon-bxs-hide"></i>
             隐藏后台（从最近任务中隐藏）
-            <mdui-switch id="switch" slot="end-icon"></mdui-switch>
+            <mdui-switch id="switch-hide" disabled checked slot="end-icon"></mdui-switch>
           </mdui-list-item>
-          <mdui-list-item>
+          <mdui-list-item class="github-item">
             <i class="iconfont icon-github-fill"></i>
             反馈&贡献
           </mdui-list-item>

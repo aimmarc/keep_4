@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Keep4</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
