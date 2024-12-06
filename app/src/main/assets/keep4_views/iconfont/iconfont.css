@@ -1,0 +1,49 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 4772579 */
+  /* Color fonts */
+  src: 
+       url('iconfont.woff2?t=1733475947734') format('woff2'),
+       url('iconfont.woff?t=1733475947734') format('woff'),
+       url('iconfont.ttf?t=1733475947734') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bxs-hide:before {
+  content: "\e6bb";
+}
+
+.icon-strawberry:before {
+  content: "\e639";
+}
+
+.icon-makalong:before {
+  content: "\e662";
+}
+
+.icon-huluobu:before {
+  content: "\e85d";
+}
+
+.icon-hanbaocaidan:before {
+  content: "\e643";
+}
+
+.icon-gengduo:before {
+  content: "\e641";
+}
+
+.icon-github-fill:before {
+  content: "\e885";
+}
+
+.icon-a-kaiguandakaiguanbi:before {
+  content: "\e67c";
+}
+

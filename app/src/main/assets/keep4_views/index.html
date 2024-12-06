@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover"
+    />
+    <link rel="stylesheet" href="mdui.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="iconfont/iconfont.css" />
+    <script src="mdui.global.js"></script>
+    <title>Keep 4</title>
+  </head>
+  <body>
+    <mdui-top-app-bar
+      style="position: fixed"
+      scroll-behavior="elevate"
+      scroll-target="body"
+    >
+      <mdui-button-icon
+        onclick="mdui.snackbar({
+            message: '别急，还没开发好呢！',
+            placement: 'top',
+            autoCloseDelay: 2000,
+            onActionClick: () => console.log('click action button')
+        })"
+        ><i class="iconfont icon-hanbaocaidan" style="font-size: 22px"></i
+      ></mdui-button-icon>
+      <mdui-top-app-bar-title>Keep4</mdui-top-app-bar-title>
+      <div style="flex-grow: 1"></div>
+      <mdui-button-icon icon="more_vert" class="more-btn"
+        ><i class="iconfont icon-gengduo" style="font-size: 22px"></i
+      ></mdui-button-icon>
+    </mdui-top-app-bar>
+    <div class="keep4-app">
+      <div class="desc">
+        <p>
+          <i class="iconfont">&#xe85d;</i>
+          本应用仅供联想小新Pad Pro
+          12.7（一代）专用，让设备在刷入第三方ROM后强制开启四扬声器。
+        </p>
+        <p>
+          <i class="iconfont">&#xe662;</i>
+          单机应用，不会泄露您的任何隐私。
+        </p>
+        <p>
+          <i class="iconfont">&#xe639;</i>
+          为保障应用正常工作，请检查下方设置，确保全部设置生效才能获得更好的体验。
+        </p>
+        <p>1. 同意应用申请的所有权限并打开下方的开关。</p>
+        <p>2. 在任务管理界面，将应用加入后台锁（下滑锁定）。</p>
+        <p>3. 不要关闭本应用，可开启允许自启、关闭电量优化等操作。</p>
+      </div>
+      <mdui-card style="width: 100%">
+        <mdui-list class="main-list">
+          <mdui-list-item id="main-item">
+            <i class="iconfont icon-a-kaiguandakaiguanbi"></i>
+            开启四扬声器
+            <mdui-switch id="switch" slot="end-icon"></mdui-switch>
+          </mdui-list-item>
+          <mdui-list-item id="hide-bg-item">
+            <i class="iconfont icon-bxs-hide"></i>
+            隐藏后台（从最近任务中隐藏）
+            <mdui-switch id="switch" slot="end-icon"></mdui-switch>
+          </mdui-list-item>
+          <mdui-list-item>
+            <i class="iconfont icon-github-fill"></i>
+            反馈&贡献
+          </mdui-list-item>
+        </mdui-list>
+      </mdui-card>
+    </div>
+    <mdui-dialog close-on-overlay-click class="example-headline-slot">
+      <span slot="headline">免责声明</span>
+      <span slot="description" class="dialog-description">
+        <p>最后更新日期：2024年12月6日 欢迎使用</p>
+        <p>
+          Keep4（以下简称“本应用”）。在使用本应用之前，请仔细阅读以下免责声明。通过使用本应用，即表示您同意本免责声明的条款和条件。如果您不同意这些条款，请勿使用本应用。
+        </p>
+        <h3>一般信息</h3>
+        <p>
+          本应用由 aimmarc（个人作者）
+          开发和提供。本应用的目的是强制开启联想小新Pad Pro
+          12.7（一代）平板四扬声器，可能会引起耗电增加、系统稳定性问题，如介意请卸载应用。尽管我们尽力确保信息的准确性和更新，但我们不对应用内容的准确性、完整性、可靠性、适用性或可用性做出任何明示或暗示的保证。
+        </p>
+        <h3>使用风险</h3>
+        <p>
+          使用本应用的风险由您自行承担。本应用按“原样”提供，不提供任何形式的保证。在适用法律允许的最大范围内，我们不承担因使用或无法使用本应用而导致的任何形式的损害，包括但不限于直接、间接、偶然、特殊或后果性损害。
+        </p>
+        <h3>外部链接</h3>
+        <p>
+          本应用可能包含指向第三方网站或服务的链接。这些链接仅为方便您而提供，并不意味着我们对这些网站或服务的内容、产品或服务的认可或负责。使用这些链接访问的任何网站或服务均由您自行承担风险。
+        </p>
+        <h3>数据和隐私</h3>
+        <p>
+          使用本应用可能涉及收集和处理您的某些个人数据。我们承诺保护您的隐私，并根据我们的隐私政策处理您的个人信息。请查阅我们的隐私政策以获取更多信息。
+        </p>
+        <h3>变更和更新</h3>
+        <p>
+          我们保留在任何时间对本免责声明进行修改或更新的权利，恕不另行通知。建议您定期查看本免责声明以了解任何更改。
+        </p>
+        <h3>联系我们</h3>
+        <p>
+          如果您对本免责声明有任何疑问或需要进一步的信息，请通过以下方式联系我们：<br />
+          电子邮件：965964317@qq.com
+          <br />GitHub：https://github.com/aimmarc/keep_4
+        </p></span
+      >
+    </mdui-dialog>
+    <script src="app.js"></script>
+  </body>
+</html>
