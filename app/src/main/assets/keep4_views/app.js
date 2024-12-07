@@ -6,13 +6,13 @@ window.onload = function () {
   var tipsDialogEl = document.querySelector(".example-headline-slot");
   var moreBtnEl = document.querySelector(".more-btn");
   var githubEl = document.querySelector(".github-item");
-  var hideBgItemEl = document.querySelector("#hide-bg-item");
+  // var hideBgItemEl = document.querySelector("#hide-bg-item");
   var switchHideEl = document.querySelector("#switch-hide");
-  var switchLoudTimmer = null;
   var canSwitch = true;
   var switchCache = true;
   try {
-    switchCache = JSON.parse(localStorage.getItem(STORAGE_SWITCH_KEY)) || true;
+    var c = JSON.parse(localStorage.getItem(STORAGE_SWITCH_KEY));
+    switchCache = typeof c === "boolean" ? c : true;
   } catch (err) {
     console.log(err);
   }

@@ -70,9 +70,9 @@ class MainActivity : ComponentActivity() {
         ) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 0)
         }
-        if (isAudioPlaying()) {
-            startRecording()
-        }
+//        if (isAudioPlaying()) {
+//            startRecording()
+//        }
 
         processInit()
     }
@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
         task = Runnable {
             Log.d("app", "轮询执行")
             try {
-                if (processStatus.equals("1")) {
+                if (processStatus == "1") {
                     if (!isRecording && isAudioPlaying()) {
                         // 有音频在播放且未录音，开始录音
                         startRecording()
@@ -118,24 +118,21 @@ class MainActivity : ComponentActivity() {
         scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS)
     }
 
-    /**
-     * 停止任务
-     */
-//    fun processStop() {
-//        scheduler.shutdown()
-//        if (isRecording) {
-//            stopRecording();
-//        }
-//    }
-
     fun isAudioPlaying(): Boolean {
         val audioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         return audioManager.isMusicActive
     }
 
     override fun onDestroy() {
-        super.onDestroy();
-        stopRecording();
+        super.onDestroy()
+        try {
+            if (isRecording) {
+                stopRecording()
+            }
+            scheduler.shutdown()
+        } catch (e: Exception) {
+            Log.d("app", "onDestroy error")
+        }
     }
 
     private fun startRecording() {
@@ -156,10 +153,14 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun stopRecording() {
-        mediaRecorder.apply {
-            stop()
-            release()
-            isRecording = false;
+        try {
+            mediaRecorder.apply {
+                stop()
+                release()
+                isRecording = false;
+            }
+        } catch (e: Exception) {
+            Log.d("app", "stop recording error", e)
         }
     }
 
@@ -185,14 +186,6 @@ class MainActivity : ComponentActivity() {
         } catch (err: Exception) {
             // todo
         }
-//        // 检查是否有应用程序可以处理这个Intent
-//        if (intent.resolveActivity(packageManager) != null) {
-//            startActivity(chooser)
-//        } else {
-//            // 处理没有浏览器的情况
-//            // 例如，显示一个Toast或者弹出一个对话框通知用户
-//            Toast.makeText(this@MainActivity, "没有可执行此操作的APP", Toast.LENGTH_LONG).show()
-//        }
     }
 
     inner class WebAppInterface(private val activity: MainActivity) {
@@ -203,17 +196,6 @@ class MainActivity : ComponentActivity() {
             // 设置标志，隐藏最近任务中的应用
             // 设置Activity在最近任务中隐藏
             Toast.makeText(this@MainActivity, "默认隐藏，切换功能还未实现", Toast.LENGTH_LONG).show()
-//            if (status.equals("0")) {
-//                // 关闭
-//                val intent = Intent(this@MainActivity, activity::class.java)
-//                startActivity(intent)
-//            }
-//            if (status.equals("1")) {
-//                // 开启
-//                val intent = Intent(this@MainActivity, activity::class.java)
-//                intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-//                startActivity(intent)
-//            }
         }
 
         @JavascriptInterface
@@ -222,21 +204,25 @@ class MainActivity : ComponentActivity() {
             // 设置标志，隐藏最近任务中的应用
             // 设置Activity在最近任务中隐藏
             Log.d("app", "进入bridge")
-
-            if (status.equals("0")) {
-                // 关闭
-                // this@MainActivity.processStop()
-                this@MainActivity.processStatus = "0"
-                if (this@MainActivity.isRecording) {
-                    this@MainActivity.stopRecording()
+            try {
+                if (status == "0") {
+                    // 关闭
+                    // this@MainActivity.processStop()
+                    this@MainActivity.processStatus = "0"
+                    if (this@MainActivity.isRecording) {
+                        this@MainActivity.stopRecording()
+                    }
+                    Toast.makeText(this@MainActivity, "已关闭四扬", Toast.LENGTH_LONG).show()
                 }
-                Toast.makeText(this@MainActivity, "已关闭四扬", Toast.LENGTH_LONG).show()
-            }
-            if (status.equals("1")) {
-                // 开启
-                // this@MainActivity.processStart()
-                this@MainActivity.processStatus = "1"
-                Toast.makeText(this@MainActivity, "已开启四扬", Toast.LENGTH_LONG).show()
+                if (status == "1") {
+                    // 开启
+                    // this@MainActivity.processStart()
+                    this@MainActivity.processStatus = "1"
+                    Toast.makeText(this@MainActivity, "已开启四扬", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "出错啦~~", Toast.LENGTH_LONG).show()
+                Log.d("app", "setLoudspeaker 错误", e)
             }
         }
 
