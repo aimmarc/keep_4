@@ -1,24 +1,27 @@
 package com.example.myapplication
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
-import android.content.pm.PackageManager
-import android.media.MediaRecorder
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioManager
+import android.media.MediaRecorder
 import android.net.Uri
+import android.os.Build
+import android.os.Bundle
 import android.util.Log
-import android.view.WindowManager
+import android.view.View
+import android.view.WindowInsetsController
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.myapp.utils.NotificationHelper
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -29,39 +32,17 @@ class MainActivity : ComponentActivity() {
     private lateinit var scheduler: ScheduledExecutorService
     private lateinit var task: Runnable
     private var processStatus = "0"
+    private lateinit var notificationHelper: NotificationHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         // 设置全屏
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
         setContentView(R.layout.settings_activity);
 
-        val webView: WebView = findViewById(R.id.webView)
-
         // 启用 JavaScript
-        webView.settings.javaScriptEnabled = true
-        webView.settings.domStorageEnabled = true
-        webView.settings.databaseEnabled = true
-        webView.settings.allowFileAccess = true
-        webView.settings.allowFileAccessFromFileURLs = true
-        webView.settings.allowUniversalAccessFromFileURLs = true
-
-        // 加载本地 HTML 文件
-        webView.loadUrl("file:///android_asset/keep4_views/index.html")
-
-        // 设置 WebViewClient 以确保链接在 WebView 中打开
-        webView.webViewClient = WebViewClient()
-
-        // 设置 WebChromeClient 以支持更多的 Web 功能
-        webView.webChromeClient = WebChromeClient()
-
-        // 添加 JavaScript 接口
-        webView.addJavascriptInterface(WebAppInterface(this), "AndroidFunction")
+        webviewInit();
 
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -70,11 +51,59 @@ class MainActivity : ComponentActivity() {
         ) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 0)
         }
-//        if (isAudioPlaying()) {
-//            startRecording()
-//        }
 
         processInit()
+        setStatusBar()
+    }
+
+    // 设置statusBar图标颜色为深色
+    fun setStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.setSystemBarsAppearance(
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
+    }
+
+    // 初始化webview
+    fun webviewInit() {
+        val webView: WebView = findViewById(R.id.webView)
+        // 启用 JavaScript
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.settings.databaseEnabled = true
+        webView.settings.allowFileAccess = true
+        webView.settings.allowFileAccessFromFileURLs = true
+        webView.settings.allowUniversalAccessFromFileURLs = true
+        // 加载本地 HTML 文件
+        webView.loadUrl("file:///android_asset/keep4_views/index.html")
+        // 设置 WebViewClient 以确保链接在 WebView 中打开
+        webView.webViewClient = WebViewClient()
+        // 设置 WebChromeClient 以支持更多的 Web 功能
+        webView.webChromeClient = WebChromeClient()
+        // 添加 JavaScript 接口
+        webView.addJavascriptInterface(WebAppInterface(this), "AndroidFunction")
+    }
+
+    // 初始化通知
+    fun notifyInit() {
+        notificationHelper = NotificationHelper(this)
+
+        // 检查并请求通知权限
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
+        } else {
+            // 权限已授予，显示通知
+            showNotify()
+        }
+    }
+
+    // 展示通知
+    fun showNotify() {
+        notificationHelper.showNotification("Keep4", "应用后台保活服务")
     }
 
     // 初始化任务
@@ -173,7 +202,17 @@ class MainActivity : ComponentActivity() {
         if (requestCode == 0 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // 权限被授予
             if (!isRecording && isAudioPlaying()) {
-                startRecording();
+                startRecording()
+            }
+            notifyInit()
+        }
+        if (requestCode == 1) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // 权限被授予
+                showNotify()
+            } else {
+                // 权限被拒绝
+                Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
