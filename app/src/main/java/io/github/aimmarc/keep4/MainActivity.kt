@@ -128,7 +128,14 @@ class MainActivity : ComponentActivity() {
     private fun setExcludedFromRecents(excluded: Boolean) {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         manager.appTasks
-            .firstOrNull { it.taskInfo.taskId == taskId }
+            .firstOrNull {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    it.taskInfo.taskId == taskId
+                } else {
+                    @Suppress("DEPRECATION")
+                    it.taskInfo.id == taskId
+                }
+            }
             ?.setExcludeFromRecents(excluded)
     }
 
