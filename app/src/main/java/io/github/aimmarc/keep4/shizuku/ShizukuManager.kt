@@ -61,7 +61,24 @@ class ShizukuManager(context: Context) {
         if (requestCode == REQUEST_CODE) refresh()
     }
 
+    private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
+        refresh()
+    }
+
+    private val binderDeadListener = Shizuku.OnBinderDeadListener {
+        remoteService = null
+        binding = false
+        connectionResult?.completeExceptionally(IllegalStateException("Shizuku 服务已断开"))
+        connectionResult = null
+        mutableSnapshot.value = mutableSnapshot.value.copy(
+            status = ShizukuStatus.UNAVAILABLE,
+            working = false,
+        )
+    }
+
     init {
+        Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
+        Shizuku.addBinderDeadListener(binderDeadListener)
         Shizuku.addRequestPermissionResultListener(permissionListener)
         refresh()
     }
@@ -102,10 +119,14 @@ class ShizukuManager(context: Context) {
     }
 
     fun close() {
+        Shizuku.removeBinderReceivedListener(binderReceivedListener)
+        Shizuku.removeBinderDeadListener(binderDeadListener)
         Shizuku.removeRequestPermissionResultListener(permissionListener)
         if (binding || remoteService != null) {
             runCatching { Shizuku.unbindUserService(userServiceArgs, userServiceConnection, false) }
         }
+        connectionResult?.cancel()
+        connectionResult = null
         remoteService = null
         binding = false
     }

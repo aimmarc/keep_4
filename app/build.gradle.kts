@@ -23,8 +23,8 @@ android {
         applicationId = "io.github.aimmarc.keep4"
         minSdk = 24
         targetSdk = 34
-        versionCode = 3
-        versionName = "2.0.0-alpha02"
+        versionCode = 4
+        versionName = "2.0.0-alpha03"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
