@@ -43,7 +43,7 @@ Keep4 不申请联网权限，不包含广告、统计 SDK 或远程配置。录
 
 从 [Releases](https://github.com/aimmarc/keep_4/releases) 下载已签名 APK。首次运行时授予麦克风和通知权限，再根据 ROM 设置后台自启动与电池白名单。
 
-GitHub Actions 生成的 Debug APK 仅用于测试。不同 CI 任务的 Debug 签名可能不同，不保证可以覆盖安装。
+GitHub Actions 生成的 Debug APK 仅用于测试。Release APK 使用项目的长期发布密钥签名，并在上传前校验证书指纹。
 
 ## 构建
 

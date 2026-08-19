@@ -4,6 +4,17 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+val releaseKeystorePath = providers.environmentVariable("ANDROID_KEYSTORE_FILE").orNull
+val releaseKeystorePassword = providers.environmentVariable("ANDROID_KEYSTORE_PASSWORD").orNull
+val releaseKeyAlias = providers.environmentVariable("ANDROID_KEY_ALIAS").orNull
+val releaseKeyPassword = providers.environmentVariable("ANDROID_KEY_PASSWORD").orNull
+val hasReleaseSigning = listOf(
+    releaseKeystorePath,
+    releaseKeystorePassword,
+    releaseKeyAlias,
+    releaseKeyPassword,
+).all { !it.isNullOrBlank() }
+
 android {
     namespace = "io.github.aimmarc.keep4"
     compileSdk = 34
@@ -12,14 +23,26 @@ android {
         applicationId = "io.github.aimmarc.keep4"
         minSdk = 24
         targetSdk = 34
-        versionCode = 2
-        versionName = "2.0.0-alpha01"
+        versionCode = 3
+        versionName = "2.0.0-alpha02"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(requireNotNull(releaseKeystorePath))
+                storePassword = releaseKeystorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
