@@ -354,11 +354,17 @@ private fun AboutScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    Image(
-                        painter = painterResource(R.mipmap.ic_launcher),
-                        contentDescription = null,
+                    Surface(
                         modifier = Modifier.size(72.dp),
-                    )
+                        shape = MaterialTheme.shapes.large,
+                        color = Color(0xFF105D43),
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_launcher_foreground),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
                     Text("Keep4", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
                     Text(
                         "版本 ${BuildConfig.VERSION_NAME}",
